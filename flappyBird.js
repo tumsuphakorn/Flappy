@@ -3,6 +3,10 @@
 const cvs = document.getElementById("canvas");
 const ctx = cvs.getContext("2d");
 
+//AUDIO
+const sound1 = new Audio("audio/sfx_flap.wav");
+const sound2 = new Audio("audio/sfx_hit.wav");
+
 //GAME VARS AND CONSTS
 let frames = 0;
 
@@ -27,6 +31,7 @@ cvs.addEventListener("click", function(e) {
     }
     case state.game: {
       bird.flap();
+      sound1.play();
       break;
     }
     case state.over: {
@@ -137,6 +142,7 @@ const bird = {
         this.y = cvs.height - fg.h - this.h / 2;
         if (state.current == state.game) {
           state.current = state.over;
+          sound2.play();
         }
       }
       if (this.speed >= this.jump) {
@@ -153,6 +159,7 @@ const bird = {
 
   flap: function() {
     this.speed = -this.jump;
+
   }
 
 }
@@ -194,8 +201,14 @@ const pipes = {
     this.x = this.x - this.dx;
 
     //COLLIDE DETECTION
-    if (bird.x + 12 > this.x && bird.y - 12 < this.y + this.h && bird.x - 12 < this.x + this.w) state.current = state.over;
-    if (bird.x + 12 > this.x && bird.y + 12 > this.y + this.h + this.gap && bird.x - 12 < this.x + this.w) state.current = state.over;
+    if (bird.x + 12 > this.x && bird.y - 12 < this.y + this.h && bird.x - 12 < this.x + this.w) {
+      state.current = state.over;
+      sound2.play();
+    }
+    if (bird.x + 12 > this.x && bird.y + 12 > this.y + this.h + this.gap && bird.x - 12 < this.x + this.w) {
+      state.current = state.over;
+      sound2.play();
+    }
   }
 }
 
@@ -226,6 +239,7 @@ const gameOverMessage = {
     if (state.current == state.over) {
       ctx.drawImage(sprite, this.sX, this.sY, this.w, this.h, this.x, this.y, this.w, this.h);
     }
+
   }
 }
 
